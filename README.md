@@ -16,7 +16,7 @@ There is no formula usage in spreadsheet LLM. Formula string parser to see what 
 
 ## Gameplan
 1. Get e2e deliverable to work
-    - Table detection
+    [x] Table detection
         * GPT to detect headers first
         * Send header data and ask for a list of tables, each table has a data range + row label range + column label range 
         * Validate dimensions matching. Store the headers and the tables. 
