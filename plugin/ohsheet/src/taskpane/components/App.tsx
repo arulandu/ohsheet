@@ -130,7 +130,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   const [currentFormulaRange, setCurrentFormulaRange] = useState<string>("");
   const [precedentRanges, setPrecedentRanges] = useState<string[]>([]);
   const [dependentRanges, setDependentRanges] = useState<string[]>([]);
-  const [highlightMode, setHighlightMode] = useState<"formula" | "table">("formula");
+  const [highlightMode, setHighlightMode] = useState<"formula" | "table">("table");
 
   // Listen to cell selection changes
   React.useEffect(() => {

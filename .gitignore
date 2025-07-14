@@ -7,3 +7,4 @@ __pycache__
 *.osht
 data/*.png
 data/*.txt
+venv
