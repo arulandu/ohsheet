@@ -34,14 +34,32 @@ class ExcelRequest(BaseModel):
     filePath: str
     sheets: List[SheetData]
     invalidate: bool = False # cache invalidation
+    debug: bool = False # debug mode for plotting
 
 class Table(BaseModel):
     """Represents a detected table in an Excel worksheet"""
     data: str
     row_hdr: str 
     col_hdr: str
-    
-    
+
+class RegionData(BaseModel):
+    format: List[dict]  # List of dicts with 'val' and 'ranges' keys
+    formula: List[dict]  # List of dicts with 'val' and 'ranges' keys
+    color: List[dict]    # List of dicts with 'val' and 'ranges' keys
+    text: List[dict]     # List of dicts with 'val' and 'ranges' keys
+
+class RelateRequest(BaseModel):
+    """Request model for the relate endpoint"""
+    filePath: str
+    sheetId: str
+    address: str
+    precedents: List[str] = []  # Cells this cell depends on
+    dependents: List[str] = []  # Cells that depend on this cell
+    debug: bool = False # debug mode for plotting
+
 class SheetCacheData(BaseModel):
+    id: str
+    shape: List[int]
     info_ranges: List[str]
     tables: List[Table]
+    regions: RegionData

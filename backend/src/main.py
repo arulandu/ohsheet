@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from api.index import router as index_router
+from api import router as api_router
 import uvicorn
 import ssl
 import os
@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(index_router, prefix="/api")
+app.include_router(api_router, prefix="/api")
 
 @app.get("/")
 async def root():

@@ -1,5 +1,5 @@
 import openai
-from api.models import SheetData, CellData, SheetCacheData
+from api.models import SheetData, CellData, SheetCacheData, RegionData
 from masker import get_regions
 from attribs import *
 from prompter import header_prompt, table_detection_prompt
@@ -56,29 +56,30 @@ def parse_table_detection_response(s):
             tables.append(table)
     return tables
 
-def detect_tables(sheet: SheetData):
+def detect_tables(sheet: SheetData, save_dir: str="", save=False):
     """
     Detect tables in an Excel sheet using OpenAI API
     """
     client = openai.OpenAI()
     model = 'gpt-4.1'
+    # model = 'o4-mini-2025-04-16'
     
     try:
-        font_rgs = get_regions(sheet, key=font_key)
-        format_rgs = get_regions(sheet, key=format_key)
-        formula_rgs = get_regions(sheet, key=formula_key, cmp=formula_cmp)
-        color_rgs = get_regions(sheet, key=color_key)
+        info_ranges = []
+        tables = []
+        regions = RegionData(
+            format=get_regions(sheet, key=format_key),
+            formula=get_regions(sheet, key=formula_key, cmp=formula_cmp),
+            color=get_regions(sheet, key=color_key),
+            text=get_regions(sheet, key=font_key),
+        )
+        print("Detected regions")
+      
+        header_prompt_text = header_prompt(regions)
+        if save:
+            with open(f'{save_dir}/{sheet.id}_header_prompt.txt', 'w') as f:
+                f.write(header_prompt_text)
 
-        fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(5*4, 10))
-        shape = sheet.shape
-        plot_regions(font_rgs, shape, 'Text', ax1)
-        plot_regions(format_rgs, shape, 'Format', ax2)
-        plot_regions(formula_rgs, shape, 'Formula', ax3)
-        plot_regions(color_rgs, shape, 'Color', ax4)
-        plt.show()
-        
-        header_prompt_text = header_prompt([font_rgs, format_rgs, formula_rgs, color_rgs])
-        
         header_response = client.responses.create(
         model=model,
         input=[
@@ -90,15 +91,15 @@ def detect_tables(sheet: SheetData):
         )
         
         info_ranges = parse_ranges_response(header_response.output_text)
-        print(info_ranges)
-        fig, (ax1) = plt.subplots(1, 1, figsize=(4, 4))
-        plot_ranges(info_ranges, shape, 'Requested Header/Info Ranges', ax1)
-        plt.show()
+        print("Parsed info ranges")
         
         header_data = {rng: '[' + ', '.join(get_values_in_range(sheet.data, rng)) + ']' for rng in info_ranges}
         header_data_input = '\n'.join([f'{h[0].replace("$", "")} {h[1]}' for h in header_data.items()])
 
         table_detection_prompt_text = table_detection_prompt(header_data_input)
+        if save:
+            with open(f'{save_dir}/{sheet.id}_table_prompt.txt', 'w') as f:
+                f.write(table_detection_prompt_text)
         
         table_response = client.responses.create(
             model=model,
@@ -112,13 +113,16 @@ def detect_tables(sheet: SheetData):
         )
 
         tables = parse_table_detection_response(table_response.output_text)
-        print(tables)
+        print("Parsed tables", tables)
 
-        fig, (ax1) = plt.subplots(1, 1, figsize=(4, 4))
-        plot_tables(tables, shape, 'Tables', ax1)
-        plt.show()
+        return SheetCacheData(
+            id=sheet.id, 
+            shape=sheet.shape, 
+            info_ranges=info_ranges, 
+            tables=tables, 
+            regions=regions
+        )
 
-        return info_ranges, tables
         
     except Exception as e:
         print(f"Error detecting tables: {e}")

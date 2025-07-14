@@ -21,7 +21,7 @@ There is no formula usage in spreadsheet LLM. Formula string parser to see what 
         * Send header data and ask for a list of tables, each table has a data range + row label range + column label range 
         * Validate dimensions matching. Store the headers and the tables. 
 2. Plugin
-    - On load, make a request to the python server running locally, sending all the data. Python should cache the tables into a .sai file. Plugin uses this api to query against headers etc.
+    - [x] On load, make a request to the python server running locally, sending all the data. Python should cache the tables into a .sai file. Plugin uses this api to query against headers etc.
     - Functionality: sheet select: show related sheets. on cell change: show connected sheet cells in UI, use backend to pull info abt the connection using the header. 
     - Chat functionality for asking questions in the spreadsheet. No chat history. Question hits python server, uses the .sai cache. 
 2.  Performance optimization.
@@ -29,6 +29,9 @@ There is no formula usage in spreadsheet LLM. Formula string parser to see what 
     - Write the fastest xlsb parser imaginable in Rust or C++
 3. Extras
     - Value to format parser. Should be easy. Like Spreadsheet LLM
+
+Main thing:
+- Figure out a way to improve table detection. It kinda sucks right now, unfort
 
 ### Architecture Constraints
 Plugins run sandboxed and can't file save. Use GPT to save to index file. 

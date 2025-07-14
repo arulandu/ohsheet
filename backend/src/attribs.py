@@ -51,7 +51,11 @@ def formula_key(x: CellData):
 
 def format_key(x: CellData):
     s = x.numberFormat
-    return None if s == 'General' else s
+    fk = font_key(x)
+    if s == 'General' and fk is None:
+        return None
+
+    return f'{s}-{fk}'
 
 def color_key(x: CellData):
     col = x.color

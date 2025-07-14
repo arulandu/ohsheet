@@ -1,5 +1,34 @@
 import numpy as np
 from .conversion import address_to_coord
+from api.models import SheetCacheData
+import matplotlib.pyplot as plt
+
+def plot_sheet_cache(cache: SheetCacheData, save_dir="./", save=False):
+    scale = min(10 / cache.shape[0], 25 / (3*cache.shape[1]))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(3*cache.shape[1]*scale, cache.shape[0]*scale))
+    shape = cache.shape
+
+    plot_regions(cache.regions.format, shape, 'Format', ax1)
+    plot_regions(cache.regions.formula, shape, 'Formula', ax2)
+    plot_regions(cache.regions.color, shape, 'Color', ax3)
+
+    if save:
+        plt.savefig(f'{save_dir}/{cache.id}_regions.png')
+    plt.show()
+
+    if len(cache.info_ranges) > 0:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(4, 4))
+        plot_ranges(cache.info_ranges, shape, 'Info Ranges', ax1)
+        if save:
+            plt.savefig(f'{save_dir}/{cache.id}_info_ranges.png')
+        plt.show()
+
+    if len(cache.tables) > 0:
+        fig, (ax1) = plt.subplots(1, 1, figsize=(4, 4))
+        plot_tables(cache.tables, shape, 'Tables', ax1)
+        if save:
+            plt.savefig(f'{save_dir}/{cache.id}_tables.png')
+        plt.show()
 
 def plot_tables(tables:list, shape, title, ax):
     colored_mask = np.zeros((*shape, 3))
@@ -12,9 +41,9 @@ def plot_tables(tables:list, shape, title, ax):
 
     for i, table in enumerate(tables):
         col = np.random.random(3)*0.5+0.5
-        color_range(table['data'], col*0.5)
-        color_range(table['row_hdr'], col*0.9)
-        color_range(table['col_hdr'], col*1.1)
+        color_range(table.data, col*0.5)
+        color_range(table.row_hdr, col*0.9)
+        color_range(table.col_hdr, col*1.1)
     
     colored_mask = np.clip(colored_mask, 0, 1)
     ax.imshow(colored_mask)
