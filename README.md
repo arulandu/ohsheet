@@ -20,11 +20,24 @@ There is no formula usage in spreadsheet LLM. Formula string parser to see what 
         * GPT to detect headers first
         * Send header data and ask for a list of tables, each table has a data range + row label range + column label range 
         * Validate dimensions matching. Store the headers and the tables. 
-    - Queries
-        * Send header data, table ranges. Given question, return some formula. 
-        * Won't handle multi-sheet. So, you do table detection for each sheet first.  
+2. Plugin
+    - On load, make a request to the python server running locally, sending all the data. Python should cache the tables into a .sai file. Plugin uses this api to query against headers etc.
+    - Functionality: sheet select: show related sheets. on cell change: show connected sheet cells in UI, use backend to pull info abt the connection using the header. 
+    - Chat functionality for asking questions in the spreadsheet. No chat history. Question hits python server, uses the .sai cache. 
 2.  Performance optimization.
     - Handroll formatting support to pyxlsb. COM call issue, want to actually support xlsb and not xlsx. Appscript. Don't want ppl to have to install LibreOffice. 
     - Write the fastest xlsb parser imaginable in Rust or C++
 3. Extras
     - Value to format parser. Should be easy. Like Spreadsheet LLM
+
+### Architecture Constraints
+Plugins run sandboxed and can't file save. Use GPT to save to index file. 
+
+COM
+- 10.4s/728 -> 142ms/cell
+- You can only batch COM value, formulas, and numberformat. You can't get rendered text.
+
+Excel JS API
+- "46731.00""ms" for 419898 -> 0.11 ms/cell (format / fill data)
+- Can batch everything except color / font. Can batch get rendered text. 
+
