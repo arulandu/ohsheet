@@ -30,6 +30,19 @@ Oh Sheet! ships with a plugin to avoid the 100x COM latency bottleneck. The plug
 
 Most importantly, Oh Sheet! caches most of the pre-computation in an `.osht` file. The vision is that once the files are indexed (e.g. regions + table ranges), queries in the future can be much faster. 
 
+<p float="left">
+   <img width="32%"  alt="image" src="https://github.com/user-attachments/assets/55a6bf37-e5b0-419b-90bb-eb233fb1f79c" />
+<img width="32%" alt="image" src="https://github.com/user-attachments/assets/f8470193-05f2-4f13-9390-a78b1cbc5646" />
+<img width="32%"  alt="image" src="https://github.com/user-attachments/assets/c03a5d12-439c-4e37-856f-126b23e0b677" />
+</p>
+<p float="left">
+<img width="48%"alt="image" src="https://github.com/user-attachments/assets/d30ce6e5-3e6d-48d1-9159-acf93dff3363" />
+<img width="48%" alt="image" src="https://github.com/user-attachments/assets/1e79c2f1-e69b-4beb-91a5-f0970daf05dd" />
+</p>
+
+If you look at the formula regions above, it correctly unions cells that have isomorphic dependency structures.
+
+
 ## Instructions
 This is guaranteed to run on MacOS, though Windows should be easier. If you are on Linux, sorry. There is no production build. Running the development build requires a node and python installation. Unfortunately, due to Microsoft Same-Origin issues, you need a SSL cert. for your localhost. Before starting, place a `.env` file in `/backend` with `OPENAI_API_KEY="..."`. Don't worry, token usage is very small. 
 - Run `./scripts/setup.sh` to configure everything, including this.
