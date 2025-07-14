@@ -31,7 +31,16 @@ Oh Sheet! ships with a plugin to avoid the 100x COM latency bottleneck. The plug
 Most importantly, Oh Sheet! caches most of the pre-computation in an `.osht` file. The vision is that once the files are indexed (e.g. regions + table ranges), queries in the future can be much faster. 
 
 ## Instructions
-This is guaranteed to run on MacOS, though Windows should be easier. If you are on Linux, sorry. There is no production build. Running the development build requires a node and python installation. Unfortunately, due to Microsoft Same-Origin issues, you need a SSL cert. for your localhost. 
+This is guaranteed to run on MacOS, though Windows should be easier. If you are on Linux, sorry. There is no production build. Running the development build requires a node and python installation. Unfortunately, due to Microsoft Same-Origin issues, you need a SSL cert. for your localhost. Before starting, place a `.env` file in `/backend` with `OPENAI_API_KEY="..."`. Don't worry, token usage is very small. 
 - Run `./scripts/setup.sh` to configure everything, including this.
 - Run `./scripts/start-server.sh` to start the backend dev server.
 - Run `./scripts/start-plugin.sh` to sideload the Excel plugin.
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/2572edfb-68c9-4e84-923d-64f2206f6a00" width="45%" />
+  <img src="https://github.com/user-attachments/assets/3967a1a6-5550-4491-9fbb-d709fbf1d3ce" width="45%" />
+</p>
+
+- Click the `Show Task Pane` button in the top left of Excel. Go to any sheet and click analyze. 
+- Check invalidate to force reset cache for the sheet. Check debug to see some pretty backend plots.
+- Set the highlight to `Table` and move your cursor around cells to see the active table. Set the highlight to `Formula` to see linked formula blocks. 
+
