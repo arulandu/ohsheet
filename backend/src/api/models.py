@@ -57,6 +57,16 @@ class RelateRequest(BaseModel):
     dependents: List[str] = []  # Cells that depend on this cell
     debug: bool = False # debug mode for plotting
 
+class QueryRequest(BaseModel):
+    """Request model for the query endpoint"""
+    filePath: str
+    sheetId: str
+    address: str
+    currentCell: str
+    currentTable: Optional[Any] = None
+    formulaRanges: Optional[dict] = None
+    prompt: str
+
 class SheetCacheData(BaseModel):
     id: str
     shape: List[int]

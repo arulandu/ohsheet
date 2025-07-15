@@ -1,0 +1,1 @@
+cd plugin/ohsheet && npm run stop

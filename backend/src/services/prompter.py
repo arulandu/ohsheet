@@ -48,3 +48,21 @@ INPUT:
 
 def table_detection_prompt(header_data_input):
     return table_detection_template.format(header_data_input)
+
+query_prompt_template = """
+You are a spreadsheet genius. Your input consists of a set of new-line separated list of tables, a query, and a cell address. Your job is to answer the query regarding the cell address using the information provided to you in the tables.
+
+Each table consists of three semicolon-separated segments: the data segment, the row header segment, and the column header segment. 
+Each segment is given by the range followed by a space and a comma-separated list of backtick-quoted cell values in row-major order e.g. A1:A3 [`value1`, `value2`, `value3`]. 
+
+INPUT:
+
+TABLES:
+{}
+
+QUERY:
+{}
+
+CELL ADDRESS:
+{}
+"""

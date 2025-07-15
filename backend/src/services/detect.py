@@ -1,8 +1,8 @@
 import openai
 from api.models import SheetData, CellData, SheetCacheData, RegionData
-from masker import get_regions
-from attribs import *
-from prompter import header_prompt, table_detection_prompt
+from services.masker import get_regions
+from utils.attribs import *
+from services.prompter import header_prompt, table_detection_prompt
 from utils.conversion import address_to_coord
 from utils.plot import plot_regions, plot_ranges, plot_tables
 import matplotlib.pyplot as plt
