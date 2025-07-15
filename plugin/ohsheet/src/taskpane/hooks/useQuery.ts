@@ -26,13 +26,14 @@ export const useQuery = () => {
       await Excel.run(async (context) => {
         const filePath = await loadFilePath();
         const worksheet = context.workbook.worksheets.getActiveWorksheet();
-        worksheet.load("id, name");
+        worksheet.load("id, name, position");
         await context.sync();
 
         // Prepare the body data similar to what's sent in /api/relate
         const body = {
           filePath: filePath,
           sheetId: worksheet.id,
+          sheetIndex: worksheet.position,
           address: currentCell.includes("!") ? currentCell.split("!")[1] : currentCell,
           currentCell: currentCell,
           currentTable: currentTable,

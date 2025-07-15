@@ -11,6 +11,7 @@ async def query_post(request: QueryRequest):
     Handle user queries about spreadsheet data
     """
     sheet_id = request.sheetId
+    sheet_index = request.sheetIndex
     cell_address = request.address
     prompt = request.prompt
 
@@ -23,7 +24,7 @@ async def query_post(request: QueryRequest):
             "error": "Sheet not found"
         }
 
-    msg = query(prompt, cell_address, sheet_cache)
+    msg = query(prompt, cell_address, sheet_cache, request.filePath, sheet_index, save=True)
     
     return {
         "success": True,

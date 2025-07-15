@@ -61,6 +61,7 @@ class QueryRequest(BaseModel):
     """Request model for the query endpoint"""
     filePath: str
     sheetId: str
+    sheetIndex: int
     address: str
     currentCell: str
     currentTable: Optional[Any] = None

@@ -125,7 +125,22 @@ export const useSheetAnalysis = (
             body: JSON.stringify(body),
           });
 
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("API Error Response:", errorText);
+            setMessage(`Error calling API: ${response.status} ${response.statusText}`);
+            return;
+          }
+
           const result = await response.json();
+          
+          // Check if the response has the expected structure
+          if (!result || !result.sheets) {
+            console.error("Unexpected API response structure:", result);
+            setMessage("Error: Unexpected response from server");
+            return;
+          }
+          
           setSheetResult(result);
 
           const totalTables = result.sheets.reduce((total: number, sheet: any) => {
